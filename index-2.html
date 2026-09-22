@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Harry Jiang — media, stories, community, and the Stimease character world." />
+  <meta name="theme-color" content="#100d12" />
+  <title>Harry Jiang × Stimease</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23100d12'/%3E%3Ccircle cx='32' cy='32' r='20' fill='%23d78ca4'/%3E%3Ccircle cx='25' cy='29' r='2.8' fill='%23100d12'/%3E%3Ccircle cx='39' cy='29' r='2.8' fill='%23100d12'/%3E%3Cpath d='M25 39 Q32 44 39 39' fill='none' stroke='%23100d12' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --ink: #100d12;
+      --ink-soft: #1a151c;
+      --paper: #f7eee9;
+      --paper-2: #e9d8da;
+      --rose: #d78ca4;
+      --rose-deep: #9b526c;
+      --cream: #f4dca8;
+      --muted: #a79da8;
+      --line: rgba(255,255,255,.13);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 72% 8%, rgba(215,140,164,.20), transparent 28rem),
+        radial-gradient(circle at 2% 45%, rgba(155,82,108,.12), transparent 30rem),
+        var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button { font: inherit; }
+    ::selection { background: var(--rose); color: var(--ink); }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .035;
+      z-index: 20;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(1180px, calc(100% - 32px));
+      margin: 18px auto 0;
+      padding: 12px 14px 12px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(16,13,18,.72);
+      backdrop-filter: blur(18px);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.03em; }
+    .brand-dot {
+      width: 30px; height: 30px; border-radius: 50%; background: var(--rose);
+      position: relative; box-shadow: inset 0 -4px 0 rgba(16,13,18,.18);
+    }
+    .brand-dot::before, .brand-dot::after { content: ""; position: absolute; top: 11px; width: 3px; height: 4px; border-radius: 50%; background: var(--ink); }
+    .brand-dot::before { left: 9px; } .brand-dot::after { right: 9px; }
+    .nav-links { display: flex; gap: 5px; align-items: center; }
+    .nav-links a { padding: 8px 12px; border-radius: 999px; color: #d9cfd8; font-size: 14px; }
+    .nav-links a:hover, .nav-links a:focus-visible { background: rgba(255,255,255,.08); color: white; outline: none; }
+    .nav-links .contact { background: var(--paper); color: var(--ink); font-weight: 700; }
+    .lang-toggle { display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; color: #d9cfd8; background: rgba(255,255,255,.04); cursor: pointer; }
+    .lang-toggle span { padding: 4px 7px; border-radius: 999px; font-size: 12px; line-height: 1; transition: background .2s ease, color .2s ease; }
+    .lang-toggle [data-lang-option].active { background: var(--rose); color: var(--ink); font-weight: 800; }
+    .lang-toggle:hover, .lang-toggle:focus-visible { border-color: rgba(255,255,255,.3); outline: none; }
+
+    main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .hero { min-height: 790px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; padding: 84px 0 64px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px; color: var(--rose); font-size: 13px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 32px; height: 1px; background: currentColor; }
+    h1 { margin: 0; font-size: clamp(62px, 8vw, 112px); line-height: .89; letter-spacing: -.075em; font-weight: 800; }
+    h1 .soft { color: var(--rose); font-family: Georgia, serif; font-style: italic; font-weight: 500; }
+    .hero-copy { max-width: 650px; margin: 30px 0; color: #cabfc8; font-size: clamp(18px, 2vw, 22px); }
+    .hero-copy strong { color: var(--paper); }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border: 1px solid var(--line); border-radius: 999px; font-weight: 750; transition: transform .2s ease, background .2s ease; }
+    .button:hover { transform: translateY(-2px); }
+    .button.primary { background: var(--rose); color: var(--ink); border-color: var(--rose); }
+    .button.secondary { background: rgba(255,255,255,.04); }
+
+    .hero-art { position: relative; min-height: 570px; }
+    .portrait-card { position: absolute; inset: 12px 0 24px 34px; overflow: hidden; border: 1px solid var(--line); border-radius: 180px 180px var(--radius) var(--radius); background: var(--paper); transform: rotate(2deg); }
+    .portrait-card img { width: 100%; height: 100%; object-fit: cover; object-position: 57% 50%; }
+    .portrait-label { position: absolute; left: 20px; bottom: 20px; max-width: 210px; padding: 12px 15px; border-radius: 16px; color: var(--ink); background: rgba(247,238,233,.86); backdrop-filter: blur(8px); font-size: 13px; font-weight: 700; }
+    .orbit { position: absolute; display: grid; place-items: center; width: 105px; height: 105px; border-radius: 50%; background: var(--ink); border: 1px solid var(--line); color: var(--cream); text-align: center; font-size: 12px; line-height: 1.25; letter-spacing: .08em; text-transform: uppercase; animation: bob 4s ease-in-out infinite; }
+    .orbit.one { left: 0; top: 60px; transform: rotate(-8deg); }
+    .orbit.two { right: -22px; bottom: 70px; width: 90px; height: 90px; background: var(--rose); color: var(--ink); animation-delay: -1.4s; }
+    @keyframes bob { 0%,100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+
+    section { padding: 110px 0; border-top: 1px solid var(--line); }
+    .section-head { display: grid; grid-template-columns: .7fr 1.3fr; gap: 40px; margin-bottom: 48px; align-items: end; }
+    .section-kicker { color: var(--rose); font-size: 13px; letter-spacing: .15em; text-transform: uppercase; }
+    h2 { margin: 0; max-width: 850px; font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055em; }
+    .section-intro { max-width: 700px; margin: 20px 0 0; color: #b9aeb8; font-size: 18px; }
+
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .pillar { min-height: 310px; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.015)); }
+    .pillar .num { color: var(--rose); font-family: Georgia, serif; font-size: 18px; font-style: italic; }
+    .pillar h3 { margin: 78px 0 12px; font-size: 27px; line-height: 1.05; letter-spacing: -.035em; }
+    .pillar p { margin: 0; color: #a99fa8; }
+
+    .work-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 14px; }
+    .project { display: flex; flex-direction: column; min-height: 360px; padding: 28px; border-radius: var(--radius); overflow: hidden; position: relative; }
+    .project.light { background: var(--paper); color: var(--ink); }
+    .project.rose { background: var(--rose-deep); }
+    .project.dark { border: 1px solid var(--line); background: var(--ink-soft); }
+    .project.wide { grid-column: span 2; min-height: 330px; }
+    .project-meta { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .68; }
+    .project h3 { margin: auto 0 14px; max-width: 680px; font-size: clamp(32px, 4vw, 52px); line-height: .98; letter-spacing: -.045em; }
+    .project p { max-width: 720px; margin: 0; opacity: .75; font-size: 17px; }
+    .metric { position: absolute; right: 28px; bottom: 20px; color: rgba(16,13,18,.13); font-size: clamp(70px, 12vw, 150px); line-height: 1; font-weight: 850; letter-spacing: -.08em; }
+
+    .world-shell { padding: 18px; border: 1px solid var(--line); border-radius: 36px; background: #151117; }
+    .world-visual { position: relative; aspect-ratio: 3 / 1.55; overflow: hidden; border-radius: 24px; }
+    .world-visual img { width: 100%; height: 100%; object-fit: cover; }
+    .world-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(16,13,18,.78), transparent 55%); }
+    .world-caption { position: absolute; left: 26px; bottom: 22px; z-index: 2; }
+    .world-caption small { display: block; color: var(--cream); letter-spacing: .12em; text-transform: uppercase; }
+    .world-caption strong { font-family: Georgia, serif; font-size: clamp(26px, 4vw, 50px); font-style: italic; font-weight: 400; }
+
+    .characters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .character { padding: 20px 16px; min-height: 150px; border-radius: 20px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.06); }
+    .character:nth-child(1) { background: var(--rose); color: var(--ink); }
+    .character-name { display: flex; align-items: center; gap: 10px; font-weight: 850; font-size: 20px; }
+    .face {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      padding: 2px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.22);
+      filter: drop-shadow(0 5px 8px rgba(0,0,0,.24));
+    }
+    .character p { margin: 18px 0 0; font-size: 13px; opacity: .72; }
+    .manifesto { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 70px; align-items: center; }
+    .manifesto blockquote { margin: 0; font-family: Georgia, serif; color: var(--paper); font-size: clamp(40px, 5vw, 70px); line-height: 1.04; font-style: italic; letter-spacing: -.035em; }
+    .manifesto p { color: #b5aab4; font-size: 17px; }
+
+    .about { display: grid; grid-template-columns: .75fr 1.25fr; gap: 70px; }
+    .about-card { align-self: start; padding: 28px; border-radius: var(--radius); background: var(--paper); color: var(--ink); }
+    .about-card .mini { color: var(--rose-deep); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; font-size: 12px; }
+    .about-card h3 { margin: 60px 0 8px; font-size: 34px; letter-spacing: -.045em; }
+    .about-card p { margin: 0; color: #5f5660; }
+    .about-copy { font-size: clamp(26px, 3vw, 40px); line-height: 1.25; letter-spacing: -.03em; }
+    .about-copy span { color: var(--rose); }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+    .fact { padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; color: #bfb4bd; font-size: 13px; }
+
+    .contact-panel { padding: 70px; border-radius: 36px; background: var(--rose); color: var(--ink); position: relative; overflow: hidden; }
+    .contact-panel::after { content: "★"; position: absolute; right: 3%; top: -18%; color: rgba(16,13,18,.08); font-size: 320px; line-height: 1; transform: rotate(12deg); }
+    .contact-panel h2 { max-width: 750px; position: relative; z-index: 1; }
+    .contact-panel p { max-width: 620px; font-size: 18px; opacity: .72; position: relative; z-index: 1; }
+    .contact-panel .actions { margin-top: 28px; position: relative; z-index: 1; }
+    .contact-panel .button.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .contact-panel .button.secondary { border-color: rgba(16,13,18,.25); background: transparent; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 34px 0 44px; color: #817781; font-size: 13px; }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 850px) {
+      .nav-links a:not(.contact) { display: none; }
+      .nav-links { gap: 3px; }
+      .nav-links .contact { display: none; }
+      .lang-toggle { margin-left: 0; }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 70px; }
+      .hero-art { min-height: 520px; }
+      .section-head, .about, .manifesto { grid-template-columns: 1fr; gap: 28px; }
+      .pillars { grid-template-columns: 1fr; }
+      .pillar { min-height: 230px; }
+      .pillar h3 { margin-top: 48px; }
+      .work-grid { grid-template-columns: 1fr; }
+      .project.wide { grid-column: auto; }
+      .characters { grid-template-columns: repeat(2, 1fr); }
+      .contact-panel { padding: 46px 28px; }
+    }
+    @media (max-width: 560px) {
+      main, .nav { width: min(100% - 22px, 1180px); }
+      .hero { gap: 28px; padding-top: 56px; }
+      h1 { font-size: clamp(54px, 18vw, 78px); }
+      .hero-copy { font-size: 17px; }
+      .hero-art { min-height: 420px; }
+      .portrait-card { inset: 6px 6px 18px 20px; border-radius: 130px 130px 24px 24px; }
+      .orbit { width: 82px; height: 82px; font-size: 10px; }
+      section { padding: 76px 0; }
+      .world-shell { padding: 8px; border-radius: 26px; }
+      .world-visual { aspect-ratio: 4 / 4.6; border-radius: 20px; }
+      .world-visual img { object-position: center; }
+      .characters { grid-template-columns: 1fr; }
+      .character:last-child { grid-column: auto; }
+      .about-copy { font-size: 25px; }
+      footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .orbit { animation: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <nav class="nav" aria-label="Main navigation">
+    <a class="brand" href="#top" aria-label="Harry Jiang home"><span class="brand-dot" aria-hidden="true"></span> HJ × STIM</a>
+    <div class="nav-links">
+      <a href="#work">Work</a><a href="#stimease">Stimease</a><a href="#about">About</a><a class="contact" href="#contact">Say hello ↗</a>
+      <button class="lang-toggle" type="button" aria-label="Switch language to Chinese" aria-pressed="false"><span data-lang-option="en" class="active">EN</span><span aria-hidden="true">/</span><span data-lang-option="zh">中文</span></button>
+    </div>
+  </nav>
+
+  <main id="top">
+    <header class="hero">
+      <div class="reveal">
+        <div class="eyebrow">Harry Jiang · 江润华</div>
+        <h1>Ideas with<br/><span class="soft">a heartbeat.</span></h1>
+        <p class="hero-copy"><strong>Media strategist, community builder, and story-world maker.</strong> I connect Chinese and American audiences through culture, play, and ideas people can feel.</p>
+        <div class="actions">
+          <a class="button primary" href="#work">Explore my work ↓</a>
+          <a class="button secondary" href="#stimease">Enter Stimease ✦</a>
+        </div>
+      </div>
+      <div class="hero-art reveal" aria-label="A Stimease character holding a star cookie">
+        <figure class="portrait-card">
+          <img src="assets/pink-monster.png" alt="A round pink horned Stimease monster holding a star-shaped cookie" />
+          <figcaption class="portrait-label">A soft creature with a lot going on inside — just like the rest of us.</figcaption>
+        </figure>
+        <div class="orbit one">Berkeley<br/>⇄<br/>The world</div>
+        <div class="orbit two">你好<br/>Hello</div>
+      </div>
+    </header>
+
+    <section aria-labelledby="approach-title">
+      <div class="section-head reveal">
+        <div class="section-kicker">01 / What I bring</div>
+        <div><h2 id="approach-title">Strategy that still feels human.</h2><p class="section-intro">I move between research, content, live experiences, and original IP — turning loose ideas into clear stories and things people can actually experience.</p></div>
+      </div>
+      <div class="pillars">
+        <article class="pillar reveal"><div class="num">01.</div><h3>Global content<br/>& marketing</h3><p>Bilingual storytelling built for audiences moving between China and the United States.</p></article>
+        <article class="pillar reveal"><div class="num">02.</div><h3>Community<br/>& live moments</h3><p>Events, esports, and cultural programming designed around participation—not passive reach.</p></article>
+        <article class="pillar reveal"><div class="num">03.</div><h3>Story-led<br/>products</h3><p>Characters and tools that make emotion visible, memorable, and useful.</p></article>
+      </div>
+    </section>
+
+    <section id="work" aria-labelledby="work-title">
+      <div class="section-head reveal">
+        <div class="section-kicker">02 / Selected work</div>
+        <div><h2 id="work-title">From audience insight to lived experience.</h2></div>
+      </div>
+      <div class="work-grid">
+        <article class="project light reveal">
+          <div class="project-meta"><span>BAMPFA</span><span>Arts & culture</span></div>
+          <h3>Making cultural programming feel closer to student life.</h3>
+          <p>Student-facing marketing, content, and outreach for Berkeley Art Museum and Pacific Film Archive.</p>
+          <div class="metric" aria-hidden="true">40%</div>
+        </article>
+        <article class="project rose reveal">
+          <div class="project-meta"><span>Student consulting</span><span>Research</span></div>
+          <h3>Listening first, then building the message.</h3>
+          <p>Survey-led audience research translated into clearer positioning and landing-page decisions.</p>
+        </article>
+        <article class="project dark wide reveal">
+          <div class="project-meta"><span>Esports production</span><span>China × California</span></div>
+          <h3>Competitive gaming as a real-world community.</h3>
+          <p>Hands-on tournament operations spanning player experience, production flow, partners, and the energy in the room.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="stimease" aria-labelledby="stimease-title">
+      <div class="section-head reveal">
+        <div class="section-kicker">03 / Original world</div>
+        <div><h2 id="stimease-title">Stimease: all the voices living around us.</h2><p class="section-intro">A character world born from memory, loss, humor, and the stubborn choice to keep imagining.</p></div>
+      </div>
+      <div class="world-shell reveal">
+        <div class="world-visual">
+          <img src="assets/stimease-world.jpeg" alt="Five small furry creatures sitting together beneath a cosmic waterfall" />
+          <div class="world-caption"><small>Early world concept</small><strong>Everyone brings a different voice.</strong></div>
+        </div>
+        <div class="characters">
+          <article class="character"><div class="character-name"><img class="face" src="assets/stew-icon.png" alt="Stew character portrait" />Stew</div><p>The round center of the world—curious, hungry, contradictory, and unmistakably me.</p></article>
+          <article class="character"><div class="character-name"><img class="face" src="assets/pink-monster.png" alt="Berta, a pink furry monster with black curled horns and a star cookie" />Berta</div><p>A little comfort, a little mischief, and always a star-shaped snack to share.</p></article>
+          <article class="character"><div class="character-name"><img class="face" src="assets/drix-icon.png" alt="Drix character portrait" />Drix</div><p>The temper. Fast, protective, and sometimes louder than the problem.</p></article>
+          <article class="character"><div class="character-name"><img class="face" src="assets/loni-icon.png" alt="Loni character portrait" />Loni</div><p>The fragile part that notices everything and pretends not to.</p></article>
+          <article class="character"><div class="character-name"><img class="face" src="assets/kavu-icon.png" alt="Kavu character portrait" />Kavu</div><p>The swagger. Big entrance, bigger opinions, secretly trying very hard.</p></article>
+          <article class="character"><div class="character-name"><img class="face" src="assets/faelen-icon.png" alt="Faelen character portrait" />Faelen</div><p>The quiet companion who stays beside you when words stop working.</p></article>
+        </div>
+      </div>
+      <div class="manifesto reveal">
+        <blockquote>“Remember the past.<br/>Keep going.<br/>Imagine what’s next.”</blockquote>
+        <div><p>Stimease can live as short stories, animation, clothing, objects, and eventually a creative tool where other people give shape to their own inner worlds.</p><p>It starts with my story, but it is built to hold more than one person.</p></div>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <div class="about">
+        <aside class="about-card reveal"><div class="mini">Currently</div><h3>UC Berkeley</h3><p>Media Studies<br/>Digital Studies focus<br/>Graduating 2026</p></aside>
+        <div class="reveal"><div class="section-kicker">04 / About</div><p class="about-copy" id="about-title">I’m Harry, a bilingual Chinese–American creator interested in <span>how culture travels</span>—through a campaign, a game, a room full of people, or one strange little monster.</p><div class="facts"><span class="fact">中文 / English</span><span class="fact">Media & culture</span><span class="fact">Marketing strategy</span><span class="fact">Esports & gaming</span><span class="fact">Original IP</span></div></div>
+      </div>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="contact-panel reveal">
+        <div class="section-kicker" style="color:inherit">05 / Let’s make something</div>
+        <h2 id="contact-title">Have an idea that needs a world around it?</h2>
+        <p>I’m open to roles, collaborations, and conversations across media, marketing, gaming, and China–U.S. projects.</p>
+        <div class="actions"><a class="button primary" href="mailto:harryj0513@berkeley.edu">Email Harry ↗</a><a class="button secondary" href="https://www.linkedin.com/in/harryj0513/" target="_blank" rel="noreferrer">LinkedIn ↗</a></div>
+      </div>
+    </section>
+    <footer><span>© <span id="year"></span> Harry Jiang / Stimease</span><span>Made between worlds, with soft monsters nearby.</span></footer>
+  </main>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const translations = {
+      '.nav-links a[href="#work"]': ['Work', '作品'],
+      '.nav-links a[href="#stimease"]': ['Stimease', 'Stimease 世界'],
+      '.nav-links a[href="#about"]': ['About', '关于我'],
+      '.nav-links .contact': ['Say hello ↗', '联系我 ↗'],
+      '.eyebrow': ['Harry Jiang · 江润华', 'Harry Jiang · 江润华'],
+      'h1': ['Ideas with<br><span class="soft">a heartbeat.</span>', '有温度的<br><span class="soft">创意。</span>'],
+      '.hero-copy': ['<strong>Media strategist, community builder, and story-world maker.</strong> I connect Chinese and American audiences through culture, play, and ideas people can feel.', '<strong>媒体策略、社群与故事世界创作者。</strong>我用文化、游戏和有共鸣的创意，连接中国与美国的受众。'],
+      '.hero .button.primary': ['Explore my work ↓', '看看我的作品 ↓'],
+      '.hero .button.secondary': ['Enter Stimease ✦', '进入 Stimease ✦'],
+      '.portrait-label': ['A soft creature with a lot going on inside — just like the rest of us.', '一个软乎乎、内心却装着很多事情的小怪兽——和我们一样。'],
+      '.orbit.one': ['Berkeley<br>⇄<br>The world', '伯克利<br>⇄<br>世界'],
+      '.orbit.two': ['你好<br>Hello', '你好<br>Hello'],
+      'section[aria-labelledby="approach-title"] .section-kicker': ['01 / What I bring', '01 / 我能带来什么'],
+      '#approach-title': ['Strategy that still feels human.', '有人的温度，也有清晰的策略。'],
+      'section[aria-labelledby="approach-title"] .section-intro': ['I move between research, content, live experiences, and original IP — turning loose ideas into clear stories and things people can actually experience.', '我在研究、内容、线下体验与原创 IP 之间工作，把零散想法变成清晰的故事和人们真正能够参与的体验。'],
+      '.pillar:nth-child(1) h3': ['Global content<br>&amp; marketing', '全球内容<br>与营销'],
+      '.pillar:nth-child(1) p': ['Bilingual storytelling built for audiences moving between China and the United States.', '为往来于中美文化之间的受众，打造双语故事与传播内容。'],
+      '.pillar:nth-child(2) h3': ['Community<br>&amp; live moments', '社群<br>与现场体验'],
+      '.pillar:nth-child(2) p': ['Events, esports, and cultural programming designed around participation—not passive reach.', '围绕真实参与感设计活动、电竞赛事与文化项目。'],
+      '.pillar:nth-child(3) h3': ['Story-led<br>products', '故事驱动的<br>产品'],
+      '.pillar:nth-child(3) p': ['Characters and tools that make emotion visible, memorable, and useful.', '用角色和工具让情绪变得可见、可记住，也能真正被使用。'],
+      '#work .section-kicker': ['02 / Selected work', '02 / 代表作品'],
+      '#work-title': ['From audience insight to lived experience.', '从受众洞察，到真实体验。'],
+      '.project.light .project-meta span:nth-child(2)': ['Arts &amp; culture', '艺术与文化'],
+      '.project.light h3': ['Making cultural programming feel closer to student life.', '让文化项目更贴近学生生活。'],
+      '.project.light p': ['Student-facing marketing, content, and outreach for Berkeley Art Museum and Pacific Film Archive.', '为伯克利艺术博物馆与太平洋电影资料馆制作面向学生的营销、内容与推广。'],
+      '.project.rose .project-meta span:nth-child(1)': ['Student consulting', '学生咨询项目'],
+      '.project.rose .project-meta span:nth-child(2)': ['Research', '研究'],
+      '.project.rose h3': ['Listening first, then building the message.', '先听见受众，再建立表达。'],
+      '.project.rose p': ['Survey-led audience research translated into clearer positioning and landing-page decisions.', '将问卷驱动的受众研究转化为更清晰的定位和落地页决策。'],
+      '.project.dark .project-meta span:nth-child(1)': ['Esports production', '电竞赛事制作'],
+      '.project.dark .project-meta span:nth-child(2)': ['China × California', '中国 × 加州'],
+      '.project.dark h3': ['Competitive gaming as a real-world community.', '让竞技游戏成为现实中的社群。'],
+      '.project.dark p': ['Hands-on tournament operations spanning player experience, production flow, partners, and the energy in the room.', '亲手执行赛事运营，覆盖选手体验、制作流程、合作伙伴与现场氛围。'],
+      '#stimease .section-kicker': ['03 / Original world', '03 / 原创世界'],
+      '#stimease-title': ['Stimease: all the voices living around us.', 'Stimease：围绕着我们的每一种声音。'],
+      '#stimease .section-intro': ['A character world born from memory, loss, humor, and the stubborn choice to keep imagining.', '一个诞生于记忆、失去、幽默，以及坚持继续想象的角色世界。'],
+      '.world-caption small': ['Early world concept', '早期世界概念'],
+      '.world-caption strong': ['Everyone brings a different voice.', '每个人都带来一种不同的声音。'],
+      '.character:nth-child(1) p': ['The round center of the world—curious, hungry, contradictory, and unmistakably me.', '这个世界圆滚滚的中心——好奇、贪吃、矛盾，也毫无疑问就是我。'],
+      '.character:nth-child(2) p': ['A little comfort, a little mischief, and always a star-shaped snack to share.', '一点安慰，一点淘气，还有一块随时愿意分享的星星饼干。'],
+      '.character:nth-child(3) p': ['The temper. Fast, protective, and sometimes louder than the problem.', '坏脾气本人。反应快、会保护人，有时声音比问题本身还大。'],
+      '.character:nth-child(4) p': ['The fragile part that notices everything and pretends not to.', '脆弱却看见一切，只是假装自己没有注意。'],
+      '.character:nth-child(5) p': ['The swagger. Big entrance, bigger opinions, secretly trying very hard.', '爱装酷，登场高调、主意很多，其实背地里一直很努力。'],
+      '.character:nth-child(6) p': ['The quiet companion who stays beside you when words stop working.', '当语言失效时，仍会安静留在你身边的陪伴。'],
+      '.manifesto blockquote': ['“Remember the past.<br>Keep going.<br>Imagine what’s next.”', '“记住过去。<br>继续向前。<br>想象未来。”'],
+      '.manifesto div p:nth-child(1)': ['Stimease can live as short stories, animation, clothing, objects, and eventually a creative tool where other people give shape to their own inner worlds.', 'Stimease 可以成为短篇故事、动画、服装与物件，最终也可以成为一种创作工具，让其他人塑造自己的内心世界。'],
+      '.manifesto div p:nth-child(2)': ['It starts with my story, but it is built to hold more than one person.', '它从我的故事开始，却可以容纳不止一个人的故事。'],
+      '.about-card .mini': ['Currently', '目前'],
+      '.about-card p': ['Media Studies<br>Digital Studies focus<br>Graduating 2026', '媒体研究专业<br>数字研究方向<br>预计 2026 年毕业'],
+      '#about .section-kicker': ['04 / About', '04 / 关于我'],
+      '#about-title': ['I’m Harry, a bilingual Chinese–American creator interested in <span>how culture travels</span>—through a campaign, a game, a room full of people, or one strange little monster.', '我是 Harry，一名中英文双语的华裔美国创作者。我关注<span>文化如何流动</span>——通过一次营销活动、一款游戏、一群聚在房间里的人，或一只奇怪的小怪兽。'],
+      '.fact:nth-child(2)': ['Media &amp; culture', '媒体与文化'],
+      '.fact:nth-child(3)': ['Marketing strategy', '营销策略'],
+      '.fact:nth-child(4)': ['Esports &amp; gaming', '电竞与游戏'],
+      '.fact:nth-child(5)': ['Original IP', '原创 IP'],
+      '#contact .section-kicker': ['05 / Let’s make something', '05 / 一起创造点什么'],
+      '#contact-title': ['Have an idea that needs a world around it?', '有一个值得建立完整世界的想法吗？'],
+      '.contact-panel > p': ['I’m open to roles, collaborations, and conversations across media, marketing, gaming, and China–U.S. projects.', '我期待媒体、营销、游戏及中美项目相关的工作机会、合作与交流。'],
+      '.contact-panel .button.primary': ['Email Harry ↗', '给 Harry 发邮件 ↗'],
+      'footer > span:last-child': ['Made between worlds, with soft monsters nearby.', '穿梭于不同世界之间创作，身边还有软乎乎的小怪兽。']
+    };
+    const languageButton = document.querySelector('.lang-toggle');
+    function setLanguage(language) {
+      const isChinese = language === 'zh';
+      Object.entries(translations).forEach(([selector, copy]) => {
+        const element = document.querySelector(selector);
+        if (element) element.innerHTML = isChinese ? copy[1] : copy[0];
+      });
+      document.documentElement.lang = isChinese ? 'zh-CN' : 'en';
+      document.title = isChinese ? 'Harry Jiang × Stimease｜个人网站' : 'Harry Jiang × Stimease';
+      document.querySelector('meta[name="description"]').content = isChinese ? 'Harry Jiang 的个人作品集与 Stimease 角色世界。' : 'Harry Jiang — media, stories, community, and the Stimease character world.';
+      languageButton.setAttribute('aria-label', isChinese ? 'Switch language to English' : '切换为中文');
+      languageButton.setAttribute('aria-pressed', String(isChinese));
+      languageButton.querySelectorAll('[data-lang-option]').forEach((option) => option.classList.toggle('active', option.dataset.langOption === language));
+      localStorage.setItem('hj-language', language);
+    }
+    languageButton.addEventListener('click', () => setLanguage(document.documentElement.lang.startsWith('zh') ? 'en' : 'zh'));
+    setLanguage(localStorage.getItem('hj-language') === 'zh' ? 'zh' : 'en');
+    const items = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+    }, { threshold: 0.12 });
+    items.forEach((item) => observer.observe(item));
+  </script>
+</body>
+</html>
