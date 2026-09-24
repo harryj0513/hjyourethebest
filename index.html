@@ -134,8 +134,22 @@
     .world-caption strong { font-family: Georgia, serif; font-size: clamp(26px, 4vw, 50px); font-style: italic; font-weight: 400; }
 
     .characters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
-    .character { padding: 20px 16px; min-height: 150px; border-radius: 20px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.06); }
-    .character:nth-child(1) { background: var(--rose); color: var(--ink); }
+    .character {
+      padding: 20px 16px;
+      min-height: 150px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.06);
+      transition: background .22s ease, color .22s ease, border-color .22s ease, transform .22s ease;
+    }
+    .character:hover {
+      background: var(--rose);
+      color: var(--ink);
+      border-color: rgba(255,255,255,.18);
+      transform: translateY(-2px);
+    }
+    .character { cursor: pointer; }
+    .character:focus-visible { outline: 2px solid var(--rose); outline-offset: 4px; }
     .character-name { display: flex; align-items: center; gap: 10px; font-weight: 850; font-size: 20px; }
     .face {
       width: 46px;
@@ -150,6 +164,64 @@
       filter: drop-shadow(0 5px 8px rgba(0,0,0,.24));
     }
     .character p { margin: 18px 0 0; font-size: 13px; opacity: .72; }
+    body.modal-open { overflow: hidden; }
+    .character-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(8,6,9,.76);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .22s ease, visibility .22s ease;
+    }
+    .character-modal.open { opacity: 1; visibility: visible; }
+    .character-dialog {
+      position: relative;
+      width: min(680px, 100%);
+      max-height: min(760px, calc(100vh - 48px));
+      overflow: auto;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 28px;
+      background: #1a151c;
+      box-shadow: 0 28px 90px rgba(0,0,0,.55);
+      transform: translateY(18px) scale(.98);
+      transition: transform .22s ease;
+    }
+    .character-modal.open .character-dialog { transform: translateY(0) scale(1); }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 50%;
+      color: var(--paper);
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+    }
+    .modal-character { display: flex; align-items: center; gap: 16px; padding-right: 48px; }
+    .modal-character img { width: 82px; height: 82px; border-radius: 50%; object-fit: cover; border: 2px solid var(--rose); }
+    .modal-character small { color: var(--rose); letter-spacing: .13em; text-transform: uppercase; }
+    .modal-character h3 { margin: 2px 0 0; font-size: 36px; }
+    .modal-story { margin: 24px 0; color: #cfc3cc; font-size: 17px; }
+    .modal-video {
+      display: grid;
+      place-items: center;
+      min-height: 210px;
+      border: 1px dashed rgba(215,140,164,.5);
+      border-radius: 20px;
+      color: var(--rose);
+      background: rgba(215,140,164,.06);
+      text-align: center;
+    }
+    .modal-video strong { display: block; font-size: 18px; }
+    .modal-video span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; }
     .manifesto { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 70px; align-items: center; }
     .manifesto blockquote { margin: 0; font-family: Georgia, serif; color: var(--paper); font-size: clamp(40px, 5vw, 70px); line-height: 1.04; font-style: italic; letter-spacing: -.035em; }
     .manifesto p { color: #b5aab4; font-size: 17px; }
@@ -326,6 +398,17 @@
     </section>
     <footer><span>© <span id="year"></span> Harry Jiang / Stimease</span><span>Made between worlds, with soft monsters nearby.</span></footer>
   </main>
+  <div class="character-modal" id="character-modal" aria-hidden="true">
+    <div class="character-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-character-name">
+      <button class="modal-close" type="button" aria-label="Close character story">×</button>
+      <div class="modal-character">
+        <img id="modal-character-image" src="" alt="" />
+        <div><small>Stimease character</small><h3 id="modal-character-name"></h3></div>
+      </div>
+      <p class="modal-story" id="modal-character-story"></p>
+      <div class="modal-video"><div><strong>Animation coming soon</strong><span>This space is ready for the character’s future video.</span></div></div>
+    </div>
+  </div>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
     const translations = {
@@ -413,6 +496,48 @@
       entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
     }, { threshold: 0.12 });
     items.forEach((item) => observer.observe(item));
+
+    const characterModal = document.getElementById('character-modal');
+    const modalClose = characterModal.querySelector('.modal-close');
+    const modalName = document.getElementById('modal-character-name');
+    const modalImage = document.getElementById('modal-character-image');
+    const modalStory = document.getElementById('modal-character-story');
+    let lastCharacterCard = null;
+
+    function openCharacterModal(card) {
+      const portrait = card.querySelector('.face');
+      modalName.textContent = card.querySelector('.character-name').textContent.trim();
+      modalImage.src = portrait.src;
+      modalImage.alt = portrait.alt;
+      modalStory.textContent = card.querySelector('p').textContent;
+      lastCharacterCard = card;
+      characterModal.classList.add('open');
+      characterModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      modalClose.focus();
+    }
+
+    function closeCharacterModal() {
+      characterModal.classList.remove('open');
+      characterModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      if (lastCharacterCard) lastCharacterCard.focus();
+    }
+
+    document.querySelectorAll('.character').forEach((card) => {
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.addEventListener('click', () => openCharacterModal(card));
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openCharacterModal(card);
+        }
+      });
+    });
+    modalClose.addEventListener('click', closeCharacterModal);
+    characterModal.addEventListener('click', (event) => { if (event.target === characterModal) closeCharacterModal(); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && characterModal.classList.contains('open')) closeCharacterModal(); });
   </script>
 </body>
 </html>
